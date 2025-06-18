@@ -19,7 +19,14 @@ suku_bunga = st.slider("Suku Bunga Acuan (%)", 0.0, 10.0, 3.5)
 
 # Prediksi
 if st.button("Prediksi Harga Emas"):
-    model = joblib.load("model/model_gru.pkl")
+  from tensorflow.keras.models import load_model
+import joblib
+
+model = load_model("model/gold_price_model.keras")
+scaler = joblib.load("model/scaler.save")
+fitur = scaler.transform([[usd_index, inflasi, suku_bunga]])
+prediksi = model.predict(fitur)[0][0]
+
     fitur = np.array([[usd_index, inflasi, suku_bunga]])
     prediksi = model.predict(fitur)[0]
     st.success(f"💰 Prediksi Harga Emas: ${prediksi:,.2f}")
